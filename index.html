@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cloud AI Security Analyst — Local Defensive Console</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="top-bar">
+      <div>
+        <h1>Cloud AI Security Analyst</h1>
+        <p class="subtitle">Local Defensive Vulnerability Triage &amp; Session Analysis</p>
+      </div>
+      <div class="status-group">
+        <span id="statusBadge" class="badge badge-idle" role="status">Checking Local AI...</span>
+        <button id="checkHealthBtn" type="button" class="btn btn-secondary btn-sm">Check Endpoint</button>
+        <button id="newSessionBtn" type="button" class="btn btn-danger btn-sm">New Session</button>
+      </div>
+    </header>
+
+    <section class="card config-bar" aria-label="Local inference configuration">
+      <div class="field-group">
+        <label for="baseUrlInput">Local API Base URL</label>
+        <input
+          id="baseUrlInput"
+          type="url"
+          value="http://127.0.0.1:8080"
+          autocomplete="off"
+          spellcheck="false"
+        />
+      </div>
+      <div class="field-group">
+        <label for="modelIdInput">Model ID</label>
+        <input
+          id="modelIdInput"
+          type="text"
+          value="Qwen3-1.7B-UD-Q4_K_XL"
+          autocomplete="off"
+          spellcheck="false"
+        />
+      </div>
+      <div class="field-group field-compact">
+        <label for="maxTokensInput">Max Reply Tokens</label>
+        <input
+          id="maxTokensInput"
+          type="number"
+          min="256"
+          max="2048"
+          step="64"
+          value="1024"
+        />
+      </div>
+      <div class="field-group field-toggle">
+        <label class="checkbox-label">
+          <input id="showReasoningCheckbox" type="checkbox" />
+          <span>Show model reasoning</span>
+        </label>
+      </div>
+    </section>
+
+    <main class="main-grid">
+      <section class="card scan-panel" aria-label="Vulnerability scanner input">
+        <div class="panel-header">
+          <h2>1. Scanner Output (Untrusted Input)</h2>
+          <span id="charCountLabel" class="muted">0 / 6,000 chars</span>
+        </div>
+
+        <label class="checkbox-label auth-check">
+          <input id="authorizedScopeCheckbox" type="checkbox" checked />
+          <span>I confirm this scan output belongs to a system or environment I am authorized to assess.</span>
+        </label>
+
+        <textarea
+          id="scanInput"
+          rows="11"
+          placeholder="Paste Nmap, Nikto, Nessus, OpenVAS, nuclei, or security log output here..."
+        ></textarea>
+
+        <div class="panel-actions">
+          <button id="analyzeBtn" type="button" class="btn btn-primary">Analyze Vulnerability Scan</button>
+          <button id="clearScanBtn" type="button" class="btn btn-secondary">Clear Scan</button>
+        </div>
+
+        <div id="errorBanner" class="error-box hidden" role="alert"></div>
+      </section>
+
+      <section class="card chat-panel" aria-label="Analysis report and follow-up conversation">
+        <div class="panel-header">
+          <h2>2. Defensive Report &amp; Follow-Up Chat</h2>
+          <div class="export-actions">
+            <button id="copyReportBtn" type="button" class="btn btn-secondary btn-sm">Copy Last Reply</button>
+            <button id="exportMdBtn" type="button" class="btn btn-secondary btn-sm">Export .MD</button>
+          </div>
+        </div>
+
+        <div id="conversationFeed" class="conversation-feed">
+          <div class="empty-state">
+            Submit scanner output on the left to generate a structured defensive triage report. Once generated, you can ask follow-up questions here in the same session.
+          </div>
+        </div>
+
+        <div id="loadingIndicator" class="loading-bar hidden" aria-live="polite">
+          <span class="spinner" aria-hidden="true"></span>
+          <span id="loadingText">Analyzing scan locally on device...</span>
+        </div>
+
+        <form id="followupForm" class="followup-form">
+          <label for="followupInput" class="sr-only">Ask a follow-up question about this scan</label>
+          <input
+            id="followupInput"
+            type="text"
+            placeholder="Ask a follow-up (e.g., 'Which finding is a likely false positive?' or 'How do I verify TLS config safely?')"
+            autocomplete="off"
+          />
+          <button id="sendFollowupBtn" type="submit" class="btn btn-primary">Send</button>
+        </form>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
